@@ -78,7 +78,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       });
                     }
                   } catch (e) {
-                    print(e);
+                    print(e.code);
+                    List<String> k =
+                        getMessageFromErrorCode(e.code, RegistrationScreen.id);
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: Text(k[0]),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text('Ok'),
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, k[1]);
+                                  },
+                                ),
+                              ],
+                            ));
                   }
                 },
                 color: Colors.blueAccent,

@@ -1,22 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flash_chat_app/screens/chat_screen.dart';
-import 'package:flash_chat_app/screens/forgot_password_screen.dart';
+import 'package:flash_chat_app/screens/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat_app/components/button.dart';
 import 'package:flash_chat_app/constants.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
-class LoginScreen extends StatefulWidget {
-  static const String id = 'login_screen';
+class ForgotPasswordScreen extends StatefulWidget {
+  static const String id = 'forgot_password_screen';
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _auth = FirebaseAuth.instance;
   String email;
-  String password;
+
   bool showSpinner = false;
   @override
   Widget build(BuildContext context) {
@@ -30,13 +29,11 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Flexible(
-                child: Hero(
-                  tag: 'logo',
-                  child: Container(
-                    height: 200.0,
-                    child: Image.asset('images/logo.png'),
-                  ),
+              Hero(
+                tag: 'logo',
+                child: Container(
+                  height: 200.0,
+                  child: Image.asset('images/logo.png'),
                 ),
               ),
               SizedBox(
@@ -52,18 +49,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     kInputDecoration.copyWith(hintText: 'Enter your email'),
               ),
               SizedBox(
-                height: 8.0,
-              ),
-              TextField(
-                onChanged: (value) {
-                  password = value;
-                },
-                obscureText: true,
-                style: TextStyle(color: Colors.black),
-                textAlign: TextAlign.center,
-                decoration: kInputDecoration,
-              ),
-              SizedBox(
                 height: 24.0,
               ),
               Button(
@@ -72,18 +57,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     setState(() {
                       showSpinner = true;
                     });
-                    final newUser = await _auth.signInWithEmailAndPassword(
-                        email: email, password: password);
-                    if (newUser != null) {
-                      Navigator.pushNamed(context, ChatScreen.id);
-                      setState(() {
-                        showSpinner = false;
-                      });
-                    }
+                    await _auth.sendPasswordResetEmail(email: email);
+
+                    Navigator.pushNamed(context, LoginScreen.id);
+                    setState(() {
+                      showSpinner = false;
+                    });
                   } catch (e) {
                     print(e.code);
-                    List<String> k =
-                        getMessageFromErrorCode(e.code, LoginScreen.id);
+                    List<String> k = getMessageFromErrorCode(
+                        e.code, ForgotPasswordScreen.id);
                     showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
@@ -102,11 +85,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 color: Colors.lightBlueAccent,
                 title: 'Log In',
               ),
-              TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, ForgotPasswordScreen.id);
-                  },
-                  child: Text('forgot password'))
             ],
           ),
         ),

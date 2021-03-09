@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flash_chat_app/screens/forgot_password_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat_app/screens/welcome_screen.dart';
 import 'package:flash_chat_app/screens/login_screen.dart';
@@ -21,6 +22,7 @@ class FlashChat extends StatelessWidget {
         WelcomeScreen.id: (context) => WelcomeScreen(),
         LoginScreen.id: (context) => LoginScreen(),
         RegistrationScreen.id: (context) => RegistrationScreen(),
+        ForgotPasswordScreen.id: (context) => ForgotPasswordScreen(),
         ChatScreen.id: (context) => ChatScreen(),
       },
     );
